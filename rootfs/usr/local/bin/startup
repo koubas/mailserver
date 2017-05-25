@@ -6,6 +6,10 @@ export DOMAIN
 export VMAILUID
 export VMAILGID
 export VMAIL_SUBDIR
+export FOLDER_SPAM
+export FOLDER_HAM
+export FOLDER_SPAM_PATH
+export FOLDER_HAM_PATH
 export DBHOST
 export DBPORT
 export DBNAME
@@ -29,6 +33,8 @@ DOMAIN=${DOMAIN:-$(hostname --domain)}
 VMAILUID=${VMAILUID:-1024}
 VMAILGID=${VMAILGID:-1024}
 VMAIL_SUBDIR=${VMAIL_SUBDIR:-"mail"}
+FOLDER_SPAM=${FOLDER_SPAM:-"Spam"}
+FOLDER_HAM=${FOLDER_HAM:-}
 DBHOST=${DBHOST:-mariadb}
 DBPORT=${DBPORT:-3306}
 DBNAME=${DBNAME:-postfix}
@@ -58,6 +64,14 @@ fi
 if [ -z "$DOMAIN" ]; then
   echo "[ERROR] The domain name must be set !"
   exit 1
+fi
+
+# Assemble SPAM and HAM folder paths
+FOLDER_SPAM_PATH=".${FOLDER_SPAM}/cur"
+if [ -n "$FOLDER_HAM" ]; then
+  FOLDER_HAM_PATH=".${FOLDER_HAM}/cur"
+else 
+  FOLDER_HAM_PATH="cur"
 fi
 
 # SSL certificates
@@ -196,6 +210,7 @@ _envtpl /etc/dovecot/dovecot-dict-sql.conf.ext
 _envtpl /etc/dovecot/conf.d/10-mail.conf
 _envtpl /etc/dovecot/conf.d/10-ssl.conf
 _envtpl /etc/dovecot/conf.d/15-lda.conf
+_envtpl /etc/dovecot/conf.d/15-mailboxes.conf
 _envtpl /etc/dovecot/conf.d/20-lmtp.conf
 _envtpl /etc/opendkim/opendkim.conf
 _envtpl /etc/opendmarc/opendmarc.conf
@@ -334,7 +349,7 @@ if [ ! -e /var/mail/sieve/default.sieve ]; then
   cat > /var/mail/sieve/default.sieve <<EOF
 require ["fileinto"];
 if header :contains "X-Spam-Flag" "YES" {
-  fileinto "Spam";
+  fileinto "${FOLDER_SPAM}";
 }
 EOF
 fi
