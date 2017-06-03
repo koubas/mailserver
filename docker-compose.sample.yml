@@ -24,8 +24,9 @@ services:
     # - DISABLE_CLAMAV=true       # Disable virus scanning
     # - DISABLE_SPAMASSASSIN=true # Disable SPAM checking
     # - DISABLE_SIEVE=true        # Disable ManageSieve protocol
-    # - FOLDER_SPAM=Spam          # Spamassassin learns from that folder
-    # - FOLDER_HAM=               # Spamassassin learns from that folder (empty string means INBOX)
+    # - FOLDER_SPAM=Spam          # Spam is moved to that folder
+    # - FOLDER_SPAM_LEARN=        # Spamassassin learns from that folder (empty string means value of FOLDER_SPAM)
+    # - FOLDER_HAM_LEARN=         # Spamassassin learns from that folder (empty string means the inbox)
     volumes:
       - /mnt/docker/mail:/var/mail
       - /mnt/docker/mail/opendkim:/etc/opendkim/keys
