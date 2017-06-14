@@ -71,6 +71,9 @@ RUN BUILD_DEPS=" \
  && apt-get clean \
  && rm -rf /tmp/* /var/lib/apt/lists/* /var/cache/debconf/*-old
 
+# Copy the Postfix spool fixtures aside as the directory would be replacet by a volume
+RUN cp -a /var/spool/postfix /var/spool/.postfix.orig
+
 VOLUME /var/mail /var/spool/postfix /etc/opendkim/keys /etc/letsencrypt
 EXPOSE 25 143 465 587 993 4190
 

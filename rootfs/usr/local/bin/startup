@@ -362,5 +362,13 @@ sievec /var/mail/sieve/default.sieve
 # Supervisor socket
 touch /dev/shm/supervisor.sock
 
+# Copy Postfix spool fixtures in place for the case when it is a volume
+cp -a \
+  /var/spool/.postfix.orig/dev \
+  /var/spool/.postfix.orig/etc \
+  /var/spool/.postfix.orig/lib \
+  /var/spool/.postfix.orig/usr \
+  /var/spool/postfix/
+
 # RUN !
 exec /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
