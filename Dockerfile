@@ -71,7 +71,7 @@ RUN BUILD_DEPS=" \
  && apt-get clean \
  && rm -rf /tmp/* /var/lib/apt/lists/* /var/cache/debconf/*-old
 
-VOLUME /var/mail /etc/opendkim/keys /etc/letsencrypt
+VOLUME /var/mail /var/spool/postfix /etc/opendkim/keys /etc/letsencrypt
 EXPOSE 25 143 465 587 993 4190
 
 COPY rootfs /
